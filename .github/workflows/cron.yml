@@ -1,0 +1,47 @@
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+    secrets:
+      GH_PAT:
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: checkout private conf
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository_owner}}/${{github.event.repository.name}}_conf
+          # https://github.com/settings/tokens
+          token: ${{ secrets.GH_PAT }}
+          path: conf
+          branch: dev
+
+      - name: checkout private prompt
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository_owner}}/${{github.event.repository.name}}_prompt
+          # https://github.com/settings/tokens
+          token: ${{ secrets.GH_PAT }}
+          path: prompt
+          branch: dev
+
+      - uses: oven-sh/setup-bun@v2
+
+      # - uses: actions/setup-node@v4
+      #   with:
+      #     node-version: lts/*
+
+      - name: ${{inputs.name}}
+        env:
+          NODE_ENV: production
+        run: |
+          ./${{inputs.name}}
