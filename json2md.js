@@ -20,5 +20,5 @@ export default async (i) => {
   }
   const 附件 = yml.includes("附件") ? json.附件 || [] : [];
   md.push(附件.join(" / "));
-  return md;
+  return [json.类型, md];
 };

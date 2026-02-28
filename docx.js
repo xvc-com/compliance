@@ -21,7 +21,9 @@ export default async (内容, 月份) => {
             if (块.block_type === 31 && 块.table) {
                 delete 块.table.property.merge_info;
                 if (块.table.property.column_width) {
-                    块.table.property.column_width = 块.table.property.column_width.map(() => 600);
+                    const 列数 = 块.table.property.column_width.length;
+                    const 平均宽度 = Math.floor(600 / 列数);
+                    块.table.property.column_width = 块.table.property.column_width.map(() => 平均宽度);
                 }
             }
             return 块;
